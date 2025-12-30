@@ -1,0 +1,102 @@
+openapi: 3.0.0
+info:
+  title: MediSlot API
+  description: API documentation for Doctor Appointment Booking System
+  version: 1.0.0
+
+servers:
+  - url: https://medislot-backend-gzd5.onrender.com/
+  - url: http://localhost:5000/api
+
+paths:
+  /auth/register:
+    post:
+      summary: Register new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, email, phone, password]
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                phone:
+                  type: string
+                password:
+                  type: string
+      responses:
+        "200":
+          description: User registered successfully
+
+  /auth/login:
+    post:
+      summary: Login user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        "200":
+          description: Login successful
+
+  /appointments:
+    get:
+      summary: Get all user appointments
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: List of appointments
+
+    post:
+      summary: Create new appointment
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [date, time, doctorType]
+              properties:
+                date:
+                  type: string
+                time:
+                  type: string
+                doctorType:
+                  type: string
+                comments:
+                  type: string
+                report:
+                  type: string
+                  format: binary
+      responses:
+        "201":
+          description: Appointment created
+
+  /services:
+    get:
+      summary: Get all medical services
+      responses:
+        "200":
+          description: Services list
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
